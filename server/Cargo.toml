@@ -1,0 +1,20 @@
+[package]
+name = "server"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+async-std = "1.12"
+bevy = { version = "0.8", default-features = false }
+async-tungstenite = {version="0.17", features=["async-std-runtime"]}
+crossbeam = "0.8"
+messages = { path = "../messages" }
+shared_components = { path = "../shared_components" }
+futures-util = "0.3"
+futures = "0.3"
+rmp-serde = "1.1.0"
+serde = "1.0"
+rand = "0.8"
+postcard = { version = "1.0.2", features = ["alloc"] }

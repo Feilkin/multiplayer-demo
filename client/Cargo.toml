@@ -1,0 +1,16 @@
+[package]
+name = "client"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bevy = "0.8"
+console_error_panic_hook = "0.1"
+ws_stream_wasm = "0.7"
+futures = "0.3"
+messages = { path = "../messages" }
+shared_components = { path = "../shared_components" }
+rmp-serde = "1.1.0"
+postcard = { version = "1.0.2", features = ["alloc"] }

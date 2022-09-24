@@ -1,0 +1,12 @@
+[workspace]
+resolver = "2" # Important! wgpu/Bevy needs this!
+members = [
+    "client",
+    "server",
+    "messages",
+    "shared_components",
+]
+
+[profile.release]
+opt-level = 'z'
+lto = "thin"

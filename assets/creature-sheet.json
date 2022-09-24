@@ -1,0 +1,85 @@
+{ "frames": [
+   {
+    "filename": "creature-sheet-0",
+    "frame": { "x": 1, "y": 1, "w": 24, "h": 24 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 },
+    "sourceSize": { "w": 24, "h": 24 },
+    "duration": 100
+   },
+   {
+    "filename": "creature-sheet-1",
+    "frame": { "x": 25, "y": 1, "w": 24, "h": 24 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 },
+    "sourceSize": { "w": 24, "h": 24 },
+    "duration": 100
+   },
+   {
+    "filename": "creature-sheet-2",
+    "frame": { "x": 49, "y": 1, "w": 24, "h": 24 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 },
+    "sourceSize": { "w": 24, "h": 24 },
+    "duration": 100
+   },
+   {
+    "filename": "creature-sheet-3",
+    "frame": { "x": 73, "y": 1, "w": 24, "h": 24 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 },
+    "sourceSize": { "w": 24, "h": 24 },
+    "duration": 100
+   },
+   {
+    "filename": "creature-sheet-4",
+    "frame": { "x": 97, "y": 1, "w": 24, "h": 24 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 },
+    "sourceSize": { "w": 24, "h": 24 },
+    "duration": 100
+   },
+   {
+    "filename": "creature-sheet-5",
+    "frame": { "x": 121, "y": 1, "w": 24, "h": 24 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 },
+    "sourceSize": { "w": 24, "h": 24 },
+    "duration": 463
+   },
+   {
+    "filename": "creature-sheet-6",
+    "frame": { "x": 145, "y": 1, "w": 24, "h": 24 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 },
+    "sourceSize": { "w": 24, "h": 24 },
+    "duration": 213
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.40-x64",
+  "image": "creature-sheet.png",
+  "format": "RGBA8888",
+  "size": { "w": 170, "h": 26 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "walk", "from": 0, "to": 4, "direction": "forward" },
+   { "name": "loop", "from": 1, "to": 4, "direction": "forward" },
+   { "name": "idle", "from": 5, "to": 6, "direction": "forward" },
+   { "name": "loop", "from": 5, "to": 6, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "Sprite Sheet", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}
