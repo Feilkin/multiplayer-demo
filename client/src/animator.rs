@@ -226,6 +226,28 @@ pub struct Animator {
     next_animation: Option<Animation>,
 }
 
+impl Animator {
+    pub fn play(&mut self, name: &str) {
+        if let Some(anim) = self.animations.get(name).cloned() {
+            self.next_animation = Some(anim);
+        } else {
+            debug!("attempted to play unknown animation '{}'", name);
+        }
+    }
+
+    pub fn set_animation(&mut self, name: &str) {
+        if let Some(anim) = self.animations.get(name).cloned() {
+            self.current_animation = anim;
+            self.current_frame = self.current_animation.start_index;
+            self.animation_timer
+                .set_duration(self.frame_times[self.current_frame].clone());
+            self.animation_timer.reset();
+        } else {
+            debug!("attempted to set unknown animation '{}'", name);
+        }
+    }
+}
+
 pub struct AnimatorPlugin;
 
 impl Plugin for AnimatorPlugin {
