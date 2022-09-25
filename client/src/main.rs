@@ -6,6 +6,7 @@ use crate::animator::AnimatorArchetype;
 use bevy::log::LogSettings;
 use bevy::reflect::TypeRegistry;
 use bevy::render::camera::RenderTarget;
+use bevy::render::renderer::RenderDevice;
 use bevy::tasks::IoTaskPool;
 use bevy::utils::HashMap;
 use bevy::{prelude::*, render::texture::ImageSettings};
@@ -35,13 +36,14 @@ fn main() {
         })
         .insert_resource(shared_components::kind_to_type_id_mappings())
         .insert_resource(LogSettings {
-            filter: "warn,client=error".into(),
+            filter: "warn,client=debug".into(),
             level: bevy::log::Level::DEBUG,
         })
         .insert_resource(ImageSettings::default_nearest()) // prevents blurry sprites
         .add_plugins(DefaultPlugins)
         .add_plugin(animator::AnimatorPlugin)
         .add_startup_system(setup)
+        .add_startup_system(print_renderer_limits)
         // .add_startup_system(spawn_websocket_client)
         // .add_system(handle_server_message)
         // .add_system(translate_sprites)
@@ -50,6 +52,10 @@ fn main() {
         // .add_system(player_input)
         // .add_system(move_entities)
         .run();
+}
+
+fn print_renderer_limits(device: Res<RenderDevice>) {
+    info!("render device limits: {:#?}", device.limits());
 }
 
 fn handle_server_message(
@@ -220,19 +226,10 @@ fn spawn_websocket_client(mut commands: Commands) {
 
 struct GameAssets {}
 
-fn setup(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
-) {
-    let animation_data: Handle<AnimatorArchetype> =
-        asset_server.load("creature-sheet.aseprite.json");
-
+fn setup(mut commands: Commands) {
     commands.insert_resource(GameAssets {});
 
     commands.spawn_bundle(Camera2dBundle::default());
-
-    commands.spawn_bundle((animation_data,));
 }
 
 fn player_input(
