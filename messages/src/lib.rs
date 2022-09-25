@@ -2,7 +2,6 @@
 
 use bevy::ecs::component::Component;
 use bevy::ecs::entity::Entity;
-use bevy::scene::DynamicScene;
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 

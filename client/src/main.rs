@@ -1,10 +1,9 @@
 //! Multiplayer webRTC test with Bevy
 
-use bevy::app::PluginGroupBuilder;
-use bevy::ecs::system::SystemState;
+mod animator;
+
+use crate::animator::AnimatorArchetype;
 use bevy::log::LogSettings;
-use bevy::reflect::erased_serde::__private::serde::de::DeserializeSeed;
-use bevy::reflect::serde::ReflectDeserializer;
 use bevy::reflect::TypeRegistry;
 use bevy::render::camera::RenderTarget;
 use bevy::tasks::IoTaskPool;
@@ -12,7 +11,7 @@ use bevy::utils::HashMap;
 use bevy::{prelude::*, render::texture::ImageSettings};
 use futures::channel::mpsc::Receiver;
 use futures::prelude::*;
-use messages::{KindId, NetworkEntity, ServerMessage};
+use messages::{NetworkEntity, ServerMessage};
 use shared_components::{NSprite, NTransform};
 use std::any::TypeId;
 use ws_stream_wasm::*;
@@ -41,11 +40,12 @@ fn main() {
         })
         .insert_resource(ImageSettings::default_nearest()) // prevents blurry sprites
         .add_plugins(DefaultPlugins)
+        .add_plugin(animator::AnimatorPlugin)
         .add_startup_system(setup)
-        .add_startup_system(spawn_websocket_client)
-        .add_system(handle_server_message)
-        .add_system(translate_sprites)
-        .add_system(translate_transfom)
+        // .add_startup_system(spawn_websocket_client)
+        // .add_system(handle_server_message)
+        // .add_system(translate_sprites)
+        // .add_system(translate_transfom)
         // .add_system(animate_sprite)
         // .add_system(player_input)
         // .add_system(move_entities)
@@ -119,24 +119,24 @@ fn handle_server_message(
     }
 }
 
-fn translate_sprites(
-    mut commands: Commands,
-    mut nsprites: Query<(Entity, &NSprite, Option<&mut TextureAtlasSprite>)>,
-    game_assets: Res<GameAssets>,
-) {
-    for (entity, n_sprite, mut sprite) in nsprites.iter_mut() {
-        if let Some(mut sprite) = sprite {
-            sprite.index = n_sprite.sprite_index as usize;
-        } else {
-            debug!("tetsingasf");
-            commands.entity(entity).insert_bundle(SpriteSheetBundle {
-                sprite: TextureAtlasSprite::new(n_sprite.sprite_index as usize),
-                texture_atlas: game_assets.sprite_atlas.clone(),
-                ..Default::default()
-            });
-        }
-    }
-}
+// fn translate_sprites(
+//     mut commands: Commands,
+//     mut nsprites: Query<(Entity, &NSprite, Option<&mut TextureAtlasSprite>)>,
+//     game_assets: Res<GameAssets>,
+// ) {
+//     for (entity, n_sprite, mut sprite) in nsprites.iter_mut() {
+//         if let Some(mut sprite) = sprite {
+//             sprite.index = n_sprite.sprite_index as usize;
+//         } else {
+//             debug!("tetsingasf");
+//             commands.entity(entity).insert_bundle(SpriteSheetBundle {
+//                 sprite: TextureAtlasSprite::new(n_sprite.sprite_index as usize),
+//                 texture_atlas: game_assets.sprite_atlas.clone(),
+//                 ..Default::default()
+//             });
+//         }
+//     }
+// }
 
 fn translate_transfom(
     mut commands: Commands,
@@ -162,7 +162,7 @@ fn translate_transfom(
 }
 
 fn spawn_websocket_client(mut commands: Commands) {
-    let (mut player_message_sender, mut player_message_receiver) =
+    let (player_message_sender, mut player_message_receiver) =
         futures::channel::mpsc::channel::<messages::PlayerMessage>(512);
     let (mut server_message_sender, server_message_receiver) =
         futures::channel::mpsc::channel::<messages::ServerMessage>(512);
@@ -218,32 +218,27 @@ fn spawn_websocket_client(mut commands: Commands) {
     commands.insert_resource(player_id);
 }
 
-struct GameAssets {
-    sprite_atlas: Handle<TextureAtlas>,
-}
+struct GameAssets {}
 
 fn setup(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    let texture_handle = asset_server.load("creature-sheet.png");
-    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(48.0, 48.0), 4, 1);
-    let texture_atlas_handle = texture_atlases.add(texture_atlas);
+    let animation_data: Handle<AnimatorArchetype> =
+        asset_server.load("creature-sheet.aseprite.json");
 
-    commands.insert_resource(GameAssets {
-        sprite_atlas: texture_atlas_handle,
-    });
+    commands.insert_resource(GameAssets {});
 
     commands.spawn_bundle(Camera2dBundle::default());
+
+    commands.spawn_bundle((animation_data,));
 }
 
 fn player_input(
-    mut commands: Commands,
     windows: Res<Windows>,
     buttons: Res<Input<MouseButton>>,
     q_camera: Query<(&Camera, &GlobalTransform)>,
-    mut q_player: Query<(Entity, Option<&mut MoveTarget>), With<PlayerControlled>>,
 ) {
     // get the camera info and transform
     // assuming there is exactly one main camera entity, so query::single() is OK
